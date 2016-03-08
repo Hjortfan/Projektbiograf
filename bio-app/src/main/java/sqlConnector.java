@@ -4,8 +4,10 @@ import java.sql.*;
 /**
  * sqlConnector class.
  * For this class to work, we need the mysql-connector-java-5-1-38-bin.jar file.
+ * available at http://dev.mysql.com/downloads/connector/j/
  * That file is put in the folder "lib" that is short for library.
  * And then added to the "java build path" trough the projects properties.
+ * 
  * @author Juicy L
  *
  */
@@ -16,7 +18,7 @@ public class sqlConnector {
 	private static ResultSet resSet;
 	
 	/**
-	 * Method that connects to the database
+	 * Method that connects to the database.
 	 * There are 2 ip's, One is for LAN connection, the other for connection over the internet.
 	 */
 	
@@ -31,10 +33,12 @@ public class sqlConnector {
 			System.out.println("Connected to MySQL server...");
 		} catch (SQLException e) {
 			e.printStackTrace();
+			System.out.println("Connection faild...");
 		}
 	}
 	 /**
 	  * Method that closes down the connection to the server.
+	  * Used by other methods when they are done.
 	  */
 	public static void closeMysql(){
 		try {
@@ -46,11 +50,11 @@ public class sqlConnector {
 	}
 	
 	/**
-	 * Method that matches user subbmitted password to the one that exist in the database.
+	 * Method that matches user submitted password to the one that exist in the database.
 	 * it uses connectionToMysql method to establish an connection.
 	 * sends after the password of the user and compares the string it gets back
 	 * to the users submitted password.
-	 * sends back an boolean that is tru if the password matches.
+	 * sends back an boolean that is true if the password matches.
 	 */
 	
 	public static boolean passwordMatch(String email, String password) {
