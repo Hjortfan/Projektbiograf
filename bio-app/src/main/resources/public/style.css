@@ -1,0 +1,86 @@
+header{
+	background-color: #99A1FF;
+	border: 1px solid black;
+	overflow: hidden;
+	padding: 20px;
+}
+header  h1{
+	float: left;
+	font-family: times, Times New Roman, times-roman, georgia, serif;
+	color: #444;
+	margin: 0;
+	padding: 0px 0px 6px 0px;
+	font-size: 51px;
+	line-height: 44px;
+	letter-spacing: -2px;
+	font-weight: bold;
+}
+
+body {
+	width: 900px;
+	margin: 0 auto;	
+}
+#login{
+	float: right;
+	padding-top: 30px;
+}
+
+.navigation {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
+
+.navigation li {
+    float: left;
+}
+
+.navigation li a {
+    display: inline-block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+.navigation input{
+	float: right;
+	display: inline-block;
+    text-align: center;
+    text-decoration: none;
+	margin-top:14px;
+}
+
+li a:hover:not(.active) {
+    background-color: #80A3E8;
+}
+.active {
+    background-color: #4CAF50;
+}
+
+#section {
+	float: left;
+	font-size: 18px;
+	border: 1px solid black;
+	
+}
+
+footer{
+	clear: both;
+	border: 2px solid black;
+	text-align: center;
+	color: white;
+	background-color: #333;
+}
+
+#catpic{
+	display: block; 
+	width: 400px;
+	height: 400px; 
+	margin: auto;
+}
+
+#cat {
+	text-align: center;
+}

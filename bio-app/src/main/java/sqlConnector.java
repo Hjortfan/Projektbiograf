@@ -25,8 +25,8 @@ public class sqlConnector {
 	public static void connectionToMysql() {
 		String userName = "bob";
 		String passWord = "bob";
-//		String host = "jdbc:mysql://81.170.228.92:51515";
-		String host = "jdbc:mysql://192.168.1.22:51515";
+		String host = "jdbc:mysql://81.170.228.92:51515";
+//		String host = "jdbc:mysql://192.168.1.22:51515";
 
 		try {
 			con = DriverManager.getConnection(host, userName, passWord);

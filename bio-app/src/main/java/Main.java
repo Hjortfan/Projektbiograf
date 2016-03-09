@@ -16,6 +16,7 @@ import spark.*;
  */
 public class Main {
 	
+	
 	private sqlConnector sql;
 	
 	/**
@@ -29,6 +30,7 @@ public class Main {
 	 * 								MySql database.
 	 */
 	public Main(sqlConnector sql){
+		Spark.staticFileLocation("/public");
 		this.sql = sql;
 		get("/hello", (req, res) -> "Hello World");
 	    get("/index", (req, res) -> renderContent("index.html"));
