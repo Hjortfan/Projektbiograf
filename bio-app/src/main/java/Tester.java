@@ -12,7 +12,13 @@ public class Tester {
 	
 		//sql.booking(2,"ossian@bob.se", seats);
 		//System.out.println(sql.getScreeningTimeAndDate(2));
-		sql.printBooking(4, "ossian@bob.se", seats);
+		
+//		sql.booking("terminator", "22.30", "2016-03-16", "ossian@bob.se", seats);
+//		System.out.println(sql.getScreeningId("terminator", "2016-03-16", "22.30"));
+//		System.out.println(sql.reservationID("ossian@bob.se", 2));
+//		System.out.println(sql.getMovieName(4));
+//		sql.getScreeningTimeAndDate(4);
+		sql.printBooking(4, seats);
 	}
 
 }

@@ -114,15 +114,15 @@ public class sqlConnector {
 		System.out.println("user added...");
 		closeMysql();
 	}
-	public void booking(int movie, String email, int[] seats) {
+	public void booking(String movie, String time, String date, String email, int[] seats) {
 		
+		int screening_id = getScreeningId(movie, time, date);
 		connectionToMysql();
 		System.out.println("making reservation...");
 		try {
-			
 			stat = con.createStatement();
 			String sql = "INSERT INTO bio.reservation "
-					+ "VALUES ( null, '"+ email +"'," + movie + ", 'true')";
+					+ "VALUES ( null, '"+ email +"'," + screening_id + ", 'true')";
 			stat.executeUpdate(sql);
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -130,26 +130,25 @@ public class sqlConnector {
 		System.out.println("user added...");
 		closeMysql();
 		
-		int res = reservationID(email, movie);
+		int reservation_id = reservationID(email, screening_id);
 		
 		for (int i = 0; i < seats.length; i++) {
-			bookingSeats(res, seats[i], movie);
+			bookingSeats(reservation_id, seats[i], screening_id);
 		}
-		printBooking(movie, email, seats);
+		printBooking(reservation_id, seats);
 	}
 	
-	public void printBooking(int movie, String email, int[] seats) {
+	public int getScreeningId(String movie, String date, String time){
 		connectionToMysql();
 		int i = -1;
-		boolean pass=false;
 		try {
 			stat = con.createStatement();
-			String sql = "SELECT reservation_id FROM bio.reservation"+
-					" WHERE reservation_user_email='"+email+
-					"' AND reservation_screening_id="+movie+"";
+			String sql = "SELECT screening_id "+
+					"FROM bio.movie, bio.screening "+
+					"WHERE movie_name='"+movie+"' AND screening_date='"+date+"' AND screening_time='"+time+"'";
 			resSet = stat.executeQuery(sql);
 			while (resSet.next()) {
-				i = resSet.getInt("reservation_screening_id");
+				i = resSet.getInt("screening_id");
 			}
 		} catch (SQLException e) {
 			System.out.println("problem");
@@ -157,19 +156,38 @@ public class sqlConnector {
 		}
 		closeMysql();
 		
-		String movieName = getMovieName(i);
-		String dateAndTime  = getScreeningTimeAndDate(i);
+		return i;
+	}
+	
+	public void printBooking(int reservation_id, int[] seats) {
+		connectionToMysql();
+		String movieName = "", date = "", time = "";
+		try {
+			stat = con.createStatement();
+			String sql = "SELECT movie_name, screening_date, screening_time FROM bio.movie, bio.screening "+
+					"WHERE movie_id=(SELECT screening_movie_id FROM bio.screening "+
+						"WHERE screening_id=(SELECT reservation_screening_id FROM bio.reservation "+
+							"WHERE reservation_id=4)) "+ 
+								"AND screening_id=(SELECT reservation_screening_id FROM bio.reservation "+
+									"WHERE reservation_id="+reservation_id+")";
+			resSet = stat.executeQuery(sql);
+			while (resSet.next()) {
+				movieName = resSet.getString("movie_name");
+				date = resSet.getString("screening_date");
+				time = resSet.getString("screening_time");
+			}
+		} catch (SQLException e) {
+			System.out.println("problem");
+			e.printStackTrace();
+		}
+		closeMysql();
 		StringBuilder sb = new StringBuilder();
-		
+		sb.append("Movie: "+movieName+"\nDate: "+date+"\nTime: "+time+"\nSeats: ");
 		for (int j = 0; j < seats.length; j++) {
 			sb.append(getSeat(seats[j]));
 		}
 		
-		String print = "Movie: "+ movieName
-				+ "Date And Time:\n"+ dateAndTime+ 
-				"Seats booked: \n"+
-				sb.toString();
-		JOptionPane.showMessageDialog(null, print);
+		JOptionPane.showMessageDialog(null, sb.toString());
 	}
 	private String getSeat(int i){
 		connectionToMysql();
@@ -189,51 +207,9 @@ public class sqlConnector {
 			e.printStackTrace();
 		}
 		closeMysql();
-		return "row: "+row + " \nNumber: "+ number;
+		return "\nRow: "+row+ " Number: "+ number;
 	}
 		
-	
-	
-	public String getScreeningTimeAndDate(int id) {
-		connectionToMysql();
-		String time = null, date = null;
-		try {
-			stat = con.createStatement();
-			String sql = "SELECT screening_date, screening_time FROM bio.screening"+
-					" WHERE screening_id="+id+"";
-			resSet = stat.executeQuery(sql);
-			
-			while (resSet.next()) {
-				date = resSet.getString("screening_date");
-				time = resSet.getString("screening_time");
-			}
-		} catch (SQLException e) {
-			System.out.println("problem");
-			e.printStackTrace();
-		}
-		closeMysql();
-		return time + " \n"+ date;
-	}
-	private String getMovieName(int movieId){
-		connectionToMysql();
-		String movieName = "";
-		try {
-			stat = con.createStatement();
-			String sql = "SELECT movie_name FROM bio.movie"+
-					" WHERE movie_id='"+movieId+"'";
-			resSet = stat.executeQuery(sql);
-			while (resSet.next()) {
-				movieName= resSet.getString("movie_name");
-			}
-		} catch (SQLException e) {
-			System.out.println("problem");
-			e.printStackTrace();
-		}
-		closeMysql();
-		
-		return movieName;
-		
-	}
 	
 	public void bookingSeats(int reservation_id, int seat_id, int screening_id){
 		connectionToMysql();
@@ -255,7 +231,7 @@ public class sqlConnector {
 		
 	}
 	
-	private int reservationID(String email, int movie) {
+	public int reservationID(String email, int screening_id) {
 		connectionToMysql();
 		int i = -1;
 		boolean pass=false;
@@ -263,7 +239,7 @@ public class sqlConnector {
 			stat = con.createStatement();
 			String sql = "SELECT reservation_id FROM bio.reservation"+
 					" WHERE reservation_user_email='"+email+
-					"' AND reservation_screening_id="+movie+"";
+					"' AND reservation_screening_id="+screening_id+"";
 			resSet = stat.executeQuery(sql);
 			while (resSet.next()) {
 				i = resSet.getInt("reservation_id");
@@ -277,64 +253,4 @@ public class sqlConnector {
 		return i;
 		
 	}
-	
-//	public static boolean seatsReserved(String movie, String date, String time) {
-//		connectionToMysql();
-//		
-//		boolean pass=false;
-//		try {
-//			stat = con.createStatement();
-//			String sql = "SELECT screening_id FROM bio.screening"+
-//					" WHERE user_email='"+email+"'";
-//			resSet = stat.executeQuery(sql);
-//			while (resSet.next()) {
-//				if(password.equals(resSet.getString("user_password"))){
-//					pass=true;
-//				}
-//			}
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}
-//		closeMysql();
-//		return pass;
-//	}
-	
-	
-//   Reference code.	
-//	
-//	public static void addTag(String tagName, int categoryID) {
-//		connectionToMysql();
-//		System.out.println("Addning new Tag...");
-//		try {
-//			
-//			stat = con.createStatement();
-//			String sql = "INSERT INTO spargrisen.tag "
-//					+ "VALUES('" + tagName + "', " + categoryID + ")";
-//			stat.executeUpdate(sql);
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}
-//		System.out.println("Tag added...");
-//		closeMysql();
-//	}
-//	/**
-//	 * Metod som tar bort tag fr�n databasen.
-//	 * @param tagName	 String som ineh�ller tagens namn som ska tas bort.
-//	 * @param CategoryID int som ineh�ller CategoryID s� att r�tt tag blir borttagen.
-//	 */
-//	public static void removeTag(String tagName, int CategoryID) {
-//		connectionToMysql();
-//		try{
-//		System.out.println("Removing Tag...");
-//
-//			String sql2 = "DELETE FROM spargrisen.tag "
-//					+ "WHERE tagName='"+tagName+"'AND tCategoryID="+CategoryID;
-//			stat.executeUpdate(sql2);
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}
-//		System.out.println("Tag removed...");
-//		closeMysql();
-//	}
-	
 }
