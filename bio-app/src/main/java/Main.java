@@ -48,8 +48,8 @@ public class Main {
     public static void main(String[] args) {
     	sqlConnector sql = new sqlConnector();
         Main m = new Main(sql);
-        
-        System.out.println(sql.passwordMatch("bob@bob.se", "bobbybrown"));
+       // sql.addUser("email@hotmail.com", "hemligt", "user");
+        System.out.println(sql.passwordMatch("email@hotmail.com", "hemligt"));
     }
     
     /**
