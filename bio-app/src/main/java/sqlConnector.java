@@ -335,4 +335,48 @@ public class sqlConnector {
 		
 	}
 
+	public void AddMovie(int i, String movie_name, String ageRestriction) {
+		
+		connectionToMysql();
+		System.out.println("Adding movie to database...");
+		try {
+
+			stat = con.createStatement();
+
+			String sql = "INSERT INTO bio.movie "+
+					"VALUE ("+i+",'"+ movie_name+"','"+ ageRestriction+"' )";
+
+			stat.executeUpdate(sql);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		System.out.println("moview added...");
+		closeMysql();
+
+	}
+
+	public void addScreening(int screening_id, String date, String time, int movie_id, int auditorium) {
+		
+		connectionToMysql();
+		System.out.println("Adding screening to database...");
+		try {
+
+			stat = con.createStatement();
+
+			String sql = "INSERT INTO bio.screening "+
+					"VALUE ("+screening_id+",'"+date+"','"+time+"',"+movie_id+","+auditorium+" )";
+
+			stat.executeUpdate(sql);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		System.out.println("screening added...");
+		closeMysql();
+
+	
+		
+	}
+		
+	
+
 }
