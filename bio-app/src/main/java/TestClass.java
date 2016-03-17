@@ -87,6 +87,10 @@ public class TestClass {
 		boolean boo = sql.passwordMatch("newUser@test.test", "testerspass");
 		assertEquals(true, boo);
 	}
+	@Test
+	public void chekIfAdmin(){
+		assertEquals(true, sql.chekIfAdmin("ossian@bob.se", "ossybossy"));
+	}
 	
 	@Test
 	public void ChangeUserInfo(){

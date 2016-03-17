@@ -386,5 +386,25 @@ public class sqlConnector {
 		return i;
 	}
 	
+	public boolean chekIfAdmin(String email, String password) {
+		connectionToMysql();
+		String str = "admin";
+		boolean pass = false;
+		try {
+			stat = con.createStatement();
+			String sql = "SELECT user_type FROM bio.user" + " WHERE user_email='" + email + "'";
+			resSet = stat.executeQuery(sql);
+			while (resSet.next()) {
+				if (str.equals(resSet.getString("user_type"))) {
+					pass = true;
+				}
+			}
+		} catch (SQLException e) {
+			System.out.println("problem");
+			e.printStackTrace();
+		}
+		closeMysql();
+		return pass;
+	}
 
 }
