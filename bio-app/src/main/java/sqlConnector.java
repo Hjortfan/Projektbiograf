@@ -61,7 +61,7 @@ public class sqlConnector {
 	 * the password matches.
 	 */
 
-	public static boolean passwordMatch(String email, String password) {
+	public boolean passwordMatch(String email, String password) {
 		connectionToMysql();
 
 		boolean pass = false;
@@ -82,7 +82,7 @@ public class sqlConnector {
 		return pass;
 	}
 
-	public static void addUser(String email, String password, String type) {
+	public void addUser(String email, String password, String type) {
 		connectionToMysql();
 		System.out.println("Addning new user...");
 		try {
@@ -113,10 +113,7 @@ public class sqlConnector {
 		closeMysql();
 	}
 
-	public void booking(int screening_id, String email, int[] seats) {
-
-
-		System.out.println(screening_id);
+	public String booking(int screening_id, String email, int[] seats) {
 		connectionToMysql();
 		System.out.println("making reservation...");
 		try {
@@ -135,7 +132,7 @@ public class sqlConnector {
 		for (int i = 0; i < seats.length; i++) {
 			bookingSeats(reservation_id, seats[i], screening_id);
 		}
-		printBooking(reservation_id);
+		return printBooking(reservation_id);
 	}
 
 	public int getScreeningId(String movie, String date, String time) {
@@ -144,7 +141,7 @@ public class sqlConnector {
 		try {
 			stat = con.createStatement();
 			String sql = "SELECT screening_id " + "FROM bio.movie, bio.screening " + "WHERE movie_name='" + movie
-					+ "' AND screening_date='" + date + "' AND screening_time='" + time + "'";
+					+ "' AND screening_date='" + date + "' AND screening_time='" + time + "' AND movie_id=screening_id";
 			resSet = stat.executeQuery(sql);
 			while (resSet.next()) {
 				i = resSet.getInt("screening_id");
@@ -185,7 +182,6 @@ public class sqlConnector {
 		for (int j = 0; j < seats.size(); j++) {
 			sb.append(getSeat(seats.get(j)));
 		}
-
 		return sb.toString();
 	}
 
@@ -336,11 +332,9 @@ public class sqlConnector {
 	}
 
 	public void AddMovie(int i, String movie_name, String ageRestriction) {
-		
 		connectionToMysql();
 		System.out.println("Adding movie to database...");
 		try {
-
 			stat = con.createStatement();
 
 			String sql = "INSERT INTO bio.movie "+
@@ -350,9 +344,8 @@ public class sqlConnector {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		System.out.println("moview added...");
+		System.out.println("movie added...");
 		closeMysql();
-
 	}
 
 	public void addScreening(int screening_id, String date, String time, int movie_id, int auditorium) {
@@ -373,10 +366,25 @@ public class sqlConnector {
 		System.out.println("screening added...");
 		closeMysql();
 
-	
-		
 	}
-		
+	
+	public int getMovieId(String movie) {
+		connectionToMysql();
+		int i = -1;
+		try {
+			stat = con.createStatement();
+			String sql = "SELECT movie_id " + "FROM bio.movie " + "WHERE movie_name='" + movie+"'";
+			resSet = stat.executeQuery(sql);
+			while (resSet.next()) {
+				i = resSet.getInt("movie_id");
+			}
+		} catch (SQLException e) {
+			System.out.println("problem");
+			e.printStackTrace();
+		}
+		closeMysql();
+		return i;
+	}
 	
 
 }
