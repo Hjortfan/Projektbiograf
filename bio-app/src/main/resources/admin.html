@@ -1,0 +1,39 @@
+	<!doctype HTML>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Bio</title>
+		<link href="style.css" rel="stylesheet" type="text/css">
+	</head>
+	<body>
+		<header>
+			<h1><a href="index.html">Bio</h1>
+		</header>
+		<nav>
+			<ul class="navigation">
+				<li><a href="admin.html">Admin</a></li>
+				<li><a href="MinProfil.html">My Profile</a></li>
+				<li><a href="">link</a></li>
+				<li><a href="">link</a></li> 
+				<form action="http://dist1.webbintro.se/resources/response.php" method="GET">
+				<input type="text" name="search" id="search" placeholder="Search movie">
+				<input type="submit" id="search" value="search">
+				</form>
+			</ul>
+		</nav>
+		<h2>Add new movie</h2>
+		<div id="section">
+			<form action="AddMovie.php" method="GET">
+			<label for="MovieID">Movie ID:</label>
+			<input type="text" name="MovieID" id="MovieID" placeholder="ID nr"><br>
+			<label for="MovieName">Movie name:</label>
+			<input type="text" name="MovieName" id="MovieName" placeholder="Name of the movie"><br>
+			<label for="MovieName">Age restriction:</label>
+			<input type="text" name="AgeRest" id="AgeRest" placeholder="Age restriction"><br>
+			<input type="submit" id="Add" value="Add">	
+		</div>
+		<footer>
+			<p>Projekt Bio</p>
+		</footer>		
+	</body>
+</html>
